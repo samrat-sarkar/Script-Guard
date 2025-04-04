@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Script Guard</title>
+      <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet" type="text/css">
+      <style>
+         * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+		 font-family: 'Aldrich', sans-serif;
+         }
+         body {
+         width: 500px;
+         padding: 20px;
+         background-color: #FFFF5E;
+         color: #000000;
+         }
+         .header {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         margin-bottom: 20px;
+         padding-bottom: 15px;
+         border-bottom: 1px solid #000000;
+         font-weight: bold;
+         }
+         .header h1 {
+         font-size: 22px;
+         font-weight: 600;
+         margin: 0;
+         background-color: #000000;
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: #51514a;
+         letter-spacing: -0.5px;
+         text-shadow: 0 0 5px #ffff5e, 0 0 10px #19ff00, 0 0 15px #ff0000;
+         }
+         .developer-credit {
+         font-size: 12px;
+         font-weight: 500;
+         color: #000000;
+         background: rgb(0 0 0 / 10%);
+         padding: 4px 8px;
+         border-radius: 4px;
+         letter-spacing: 0.3px;
+         }
+         .bulk-actions {
+         display: flex;
+         gap: 8px;
+         margin-bottom: 12px;
+         }
+         .bulk-btn {
+         padding: 8px 16px;
+         border: none;
+         border-radius: 6px;
+         cursor: pointer;
+         font-size: 14px;
+         font-weight: 500;
+         transition: all 0.2s ease;
+         flex: 1;
+         text-align: center;
+         }
+         .bulk-btn.enable-all {
+         background: #19ff00;
+         color: #000000;
+         font-weight: bolder;
+         }
+         .bulk-btn.disable-all {
+         background: #FF0000;
+         color: #000000;
+         font-weight: bolder;
+         }
+         .bulk-btn:hover {
+         opacity: 0.9;
+         transform: translateY(-1px);
+         }
+         .bulk-btn.enable-all:hover {
+         background: #000000;
+         color: #19ff00;
+         }
+         .bulk-btn.disable-all:hover {
+         background: #000000;
+         color: #FF0000;
+         }
+         .filter-container {
+         display: flex;
+         gap: 8px;
+         margin-bottom: 20px;
+         flex-wrap: wrap;
+         }
+         .filter-btn {
+         padding: 8px 16px;
+         border: 1px solid #000000;
+         background: #FFFF5E;
+         color: #000000;
+         border-radius: 6px;
+         cursor: pointer;
+         font-size: 14px;
+         transition: all 0.2s ease;
+         flex: 1;
+         min-width: 80px;
+         text-align: center;
+         }
+         .filter-btn:hover {
+         background: #000000;
+         color: #FFFF5E;
+         }
+         .filter-btn.active {
+         background: #1d1a9f;
+         color: #ffffff;
+         border-color: #28a745;
+         font-weight: bold;
+         }
+         .file-list {
+         max-height: 400px;
+         overflow-y: auto;
+         padding-right: 5px;
+         }
+         .file-list::-webkit-scrollbar {
+         width: 6px;
+         }
+         .file-list::-webkit-scrollbar-track {
+         background: #000000;
+         border-radius: 3px;
+         }
+         .file-list::-webkit-scrollbar-thumb {
+         background: #FF0000;
+         border-radius: 3px;
+         }
+         .file-item {
+         display: flex;
+         align-items: center;
+         padding: 12px;
+         border-radius: 8px;
+         margin-bottom: 8px;
+         background: #FFFF5E;
+         border: 1px solid #000000;
+         transition: all 0.2s ease;
+         animation: fadeIn 0.3s ease forwards;
+         }
+         .file-item:hover {
+         background: #000000;
+         color: #FFFF5E;
+         transform: translateX(2px);
+         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+         }
+         .file-info {
+         flex: 1;
+         min-width: 0;
+         }
+         .file-name {
+         font-size: 14px;
+         font-weight: 500;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         margin-bottom: 4px;
+         }
+         .file-type {
+         font-size: 12px;
+         color: #000000;
+         background: #ffbf00;
+         padding: 2px 8px;
+         border-radius: 4px;
+         display: inline-block;
+         }
+         .toggle-btn {
+         padding: 8px 16px;
+         border: none;
+         border-radius: 6px;
+         cursor: pointer;
+         font-size: 14px;
+         font-weight: 500;
+         transition: all 0.2s ease;
+         min-width: 80px;
+         text-align: center;
+         }
+         .toggle-btn.enabled {
+         background: #19ff00;
+         color: #000000;
+         }
+         .toggle-btn.disabled {
+         background: #FF0000;
+         color: #000000;
+         }
+         .empty-state {
+         text-align: center;
+         padding: 40px 20px;
+         color: #000000;
+         }
+         .empty-state p {
+         margin-top: 10px;
+         font-size: 14px;
+         }
+         @keyframes fadeIn {
+         from { opacity: 0; transform: translateY(10px); }
+         to { opacity: 1; transform: translateY(0); }
+         }
+         .status-badge {
+         font-size: 10px;
+         padding: 2px 6px;
+         border-radius: 10px;
+         margin-left: 8px;
+         background: #FF0000;
+         color: #000000;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header">
+         <h1>Script Guard</h1>
+         <span class="developer-credit">by Samrat Sarkar</span>
+      </div>
+      <div class="bulk-actions">
+         <button class="bulk-btn enable-all" id="enableAll">Enable All</button>
+         <button class="bulk-btn disable-all" id="disableAll">Disable All</button>
+      </div>
+      <div class="filter-container">
+         <button class="filter-btn active" data-type="all">All Files</button>
+         <button class="filter-btn" data-type="js">JavaScript</button>
+         <button class="filter-btn" data-type="css">CSS</button>
+         <button class="filter-btn" data-type="other">Other</button>
+      </div>
+      <div class="file-list" id="fileList">
+         <div class="empty-state">
+            <p>Loading files...</p>
+         </div>
+      </div>
+      <script src="popup.js"></script>
+   </body>
+</html>
